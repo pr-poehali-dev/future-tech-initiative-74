@@ -3,14 +3,20 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Slots from '@/components/games/Slots'
 import Roulette from '@/components/games/Roulette'
 import Blackjack from '@/components/games/Blackjack'
+import Mines from '@/components/games/Mines'
+import Cups from '@/components/games/Cups'
+import CoinFlip from '@/components/games/CoinFlip'
 import Icon from '@/components/ui/icon'
 
-type GameId = 'slots' | 'roulette' | 'blackjack'
+type GameId = 'slots' | 'roulette' | 'blackjack' | 'mines' | 'cups' | 'coinflip'
 
 const GAMES = [
   { id: 'slots' as GameId, name: 'Слоты', emoji: '🎰', desc: 'Крути барабаны' },
   { id: 'roulette' as GameId, name: 'Рулетка', emoji: '🎡', desc: 'Ставь на число' },
   { id: 'blackjack' as GameId, name: 'Блэкджек', emoji: '🃏', desc: '21 — твоя цель' },
+  { id: 'mines' as GameId, name: 'Mines', emoji: '💣', desc: 'Открывай алмазы' },
+  { id: 'cups' as GameId, name: 'Стаканчики', emoji: '🎩', desc: 'Следи за шариком' },
+  { id: 'coinflip' as GameId, name: 'Орёл и решка', emoji: '🪙', desc: '50/50 — x2' },
 ]
 
 export default function Games() {
@@ -44,20 +50,20 @@ export default function Games() {
               Выбери игру
             </motion.h1>
             <p className="text-neutral-400 mb-10">Демо-режим · Виртуальный баланс: {balance.toLocaleString()} ₽</p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-5">
               {GAMES.map((game, i) => (
                 <motion.button
                   key={game.id}
                   onClick={() => setActiveGame(game.id)}
-                  className="group bg-neutral-950 border border-neutral-800 hover:border-yellow-400/50 rounded-2xl p-8 text-left transition-all"
+                  className="group bg-neutral-950 border border-neutral-800 hover:border-yellow-400/50 rounded-2xl p-6 text-left transition-all"
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.1 }}
+                  transition={{ delay: i * 0.07 }}
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  <div className="text-5xl mb-4">{game.emoji}</div>
-                  <h2 className="text-xl font-bold mb-1 group-hover:text-yellow-400 transition-colors">{game.name}</h2>
+                  <div className="text-5xl mb-3">{game.emoji}</div>
+                  <h2 className="text-lg font-bold mb-1 group-hover:text-yellow-400 transition-colors">{game.name}</h2>
                   <p className="text-neutral-500 text-sm">{game.desc}</p>
                 </motion.button>
               ))}
@@ -81,6 +87,9 @@ export default function Games() {
               {activeGame === 'slots' && <Slots balance={balance} setBalance={setBalance} />}
               {activeGame === 'roulette' && <Roulette balance={balance} setBalance={setBalance} />}
               {activeGame === 'blackjack' && <Blackjack balance={balance} setBalance={setBalance} />}
+              {activeGame === 'mines' && <Mines balance={balance} setBalance={setBalance} />}
+              {activeGame === 'cups' && <Cups balance={balance} setBalance={setBalance} />}
+              {activeGame === 'coinflip' && <CoinFlip balance={balance} setBalance={setBalance} />}
             </motion.div>
           </AnimatePresence>
         )}
