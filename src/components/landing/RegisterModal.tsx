@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import Icon from '@/components/ui/icon'
 
+const REGISTER_URL = 'https://functions.poehali.dev/9191acbb-a0f8-42a0-99b4-173db025be60'
+
 interface RegisterModalProps {
   open: boolean
   onClose: () => void
@@ -12,14 +14,30 @@ interface RegisterModalProps {
 export default function RegisterModal({ open, onClose }: RegisterModalProps) {
   const [form, setForm] = useState({ email: '', password: '', name: '' })
   const [submitted, setSubmitted] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setSubmitted(true)
+    setLoading(true)
+    setError('')
+    const res = await fetch(REGISTER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(form)
+    })
+    const data = await res.json()
+    setLoading(false)
+    if (data.success) {
+      setSubmitted(true)
+    } else {
+      setError(data.error || 'Ошибка регистрации')
+    }
   }
 
   const handleClose = () => {
     setSubmitted(false)
+    setError('')
     setForm({ email: '', password: '', name: '' })
     onClose()
   }
@@ -60,42 +78,40 @@ export default function RegisterModal({ open, onClose }: RegisterModalProps) {
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
-                  <div>
-                    <Input
-                      type="text"
-                      placeholder="Ваше имя"
-                      required
-                      value={form.name}
-                      onChange={e => setForm({ ...form, name: e.target.value })}
-                      className="bg-neutral-900 border-neutral-700 text-white placeholder:text-neutral-500 focus:border-yellow-400 h-12"
-                    />
-                  </div>
-                  <div>
-                    <Input
-                      type="email"
-                      placeholder="Email"
-                      required
-                      value={form.email}
-                      onChange={e => setForm({ ...form, email: e.target.value })}
-                      className="bg-neutral-900 border-neutral-700 text-white placeholder:text-neutral-500 focus:border-yellow-400 h-12"
-                    />
-                  </div>
-                  <div>
-                    <Input
-                      type="password"
-                      placeholder="Пароль"
-                      required
-                      value={form.password}
-                      onChange={e => setForm({ ...form, password: e.target.value })}
-                      className="bg-neutral-900 border-neutral-700 text-white placeholder:text-neutral-500 focus:border-yellow-400 h-12"
-                    />
-                  </div>
+                  <Input
+                    type="text"
+                    placeholder="Ваше имя"
+                    required
+                    value={form.name}
+                    onChange={e => setForm({ ...form, name: e.target.value })}
+                    className="bg-neutral-900 border-neutral-700 text-white placeholder:text-neutral-500 focus:border-yellow-400 h-12"
+                  />
+                  <Input
+                    type="email"
+                    placeholder="Email"
+                    required
+                    value={form.email}
+                    onChange={e => setForm({ ...form, email: e.target.value })}
+                    className="bg-neutral-900 border-neutral-700 text-white placeholder:text-neutral-500 focus:border-yellow-400 h-12"
+                  />
+                  <Input
+                    type="password"
+                    placeholder="Пароль"
+                    required
+                    value={form.password}
+                    onChange={e => setForm({ ...form, password: e.target.value })}
+                    className="bg-neutral-900 border-neutral-700 text-white placeholder:text-neutral-500 focus:border-yellow-400 h-12"
+                  />
+                  {error && (
+                    <p className="text-red-400 text-sm">{error}</p>
+                  )}
                   <Button
                     type="submit"
                     size="lg"
-                    className="w-full bg-yellow-400 text-black hover:bg-yellow-300 font-bold tracking-wide h-12 text-base"
+                    disabled={loading}
+                    className="w-full bg-yellow-400 text-black hover:bg-yellow-300 font-bold tracking-wide h-12 text-base disabled:opacity-60"
                   >
-                    Играть сейчас
+                    {loading ? 'Регистрация...' : 'Играть сейчас'}
                   </Button>
                 </form>
 
