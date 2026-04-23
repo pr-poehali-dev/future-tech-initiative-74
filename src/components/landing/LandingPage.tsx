@@ -70,7 +70,7 @@ export default function LandingPage() {
             key={section.id}
             {...section}
             isActive={index === activeSection}
-            onButtonClick={section.showButton ? () => setModalOpen(true) : undefined}
+            onButtonClick={section.showButton ? () => window.location.href = '/games' : undefined}
           />
         ))}
       </div>
