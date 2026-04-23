@@ -55,7 +55,7 @@ export default function LandingPage() {
         ))}
       </nav>
       <motion.div
-        className="fixed top-0 left-0 right-0 h-0.5 bg-white origin-left z-30"
+        className="fixed top-0 left-0 right-0 h-0.5 bg-yellow-400 origin-left z-30"
         style={{ scaleX }}
       />
       <div
