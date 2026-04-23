@@ -1,0 +1,11 @@
+{
+  "tests": [
+    {
+      "name": "Reject without password",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 401,
+      "bodyMatcher": "none"
+    }
+  ]
+}
